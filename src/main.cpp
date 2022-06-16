@@ -1,4 +1,5 @@
 #include <Adafruit_NeoPixel.h>
+#include <BasicLinearAlgebra.h>
 
 
 // Which pin on the Arduino is connected to the NeoPixels?
@@ -7,6 +8,8 @@
 #define NUMPIXELS 20 // Popular NeoPixel ring size
 #define NROWS      5
 #define NCOLS      4
+
+int t = 0;
 
 // When setting up the NeoPixel library, we tell it how many pixels,
 // and which pin to use to send signals. Note that for older NeoPixel
@@ -104,6 +107,8 @@ class Pixel {
 Pixel NowPixelManager[NUMPIXELS];
 Pixel NextPixelManager[NUMPIXELS];
 
+using namespace BLA;
+
 void setup() {
   pixels.begin(); // INITIALIZE NeoPixel strip object (REQUIRED)
   Serial.begin(9600);
@@ -138,7 +143,7 @@ void loop() {
 
   for(int i=0; i<NUMPIXELS; i++) {
     if (NowPixelManager[i].isOn) {
-      pixels.setPixelColor(i, pixels.Color(rs[i % 7], gs[i % 7], bs[i % 7]));
+      pixels.setPixelColor(i, pixels.Color(rs[t % 7], gs[t % 7], bs[t % 7]));
       int nextPixelIdx = NowPixelManager[i].getNextIdx();
       Serial.println(nextPixelIdx);
       Serial.println("====");
@@ -157,6 +162,7 @@ void loop() {
   }
 
   delay(DELAYVAL); 
+  t++;
 
       
 }
