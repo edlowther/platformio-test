@@ -4,16 +4,16 @@
 // Which pin on the Arduino is connected to the NeoPixels?
 #define PIN        9 // On Trinket or Gemma, suggest changing this to 1
 
-int NROWS = 5;
-int NCOLS = 4;
-const int NPIXELS = 20;
-const int NBOIDS = 3;
+int NROWS = 7;
+int NCOLS = 7;
+const int NPIXELS = 49;
+const int NBOIDS = 21;
 
-int BRIGHTNESS_INCREMENT = 10;
-int DELAYVAL = 150;
+int BRIGHTNESS_INCREMENT = 50;
+int DELAYVAL = 2;
 
 int STARTING_POSITION_LIMITS[2] = {1, 2};
-float STARTING_VELOCITY_LIMITS[2] = {-2.0, 3.0};
+float STARTING_VELOCITY_LIMITS[2] = {-0.8, 1.3};
 
 Adafruit_NeoPixel pixels(NPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 using namespace BLA;
@@ -38,7 +38,7 @@ class Flock {
         float LO = STARTING_VELOCITY_LIMITS[0];
         float HI = STARTING_VELOCITY_LIMITS[1];
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < NBOIDS; i++) {
             positions.xs(i) = random(STARTING_POSITION_LIMITS[0]);
             positions.ys(i) = random(STARTING_POSITION_LIMITS[0]);
             velocities.dxs(i) = LO + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX/(HI-LO)));
@@ -53,8 +53,8 @@ class Flock {
         BLA::Matrix<NBOIDS> directionToMiddleXs = positions.xs - getMean(positions.xs);
         BLA::Matrix<NBOIDS> directionToMiddleYs = positions.ys - getMean(positions.ys);
 
-        velocities.dxs -= directionToMiddleXs;
-        velocities.dys -= directionToMiddleYs;
+        velocities.dxs -= directionToMiddleXs * 0.1;
+        velocities.dys -= directionToMiddleYs * 0.1;
     }
 
     float getMean(BLA::Matrix<NBOIDS> values) {
@@ -112,10 +112,10 @@ void setup() {
 void loop() {
   flock.update();
   view.map(flock.positions);
-
   pixels.clear(); // Set all pixel colors to 'off'
   for(int i=0; i<NPIXELS; i++) {
     int brightness = view.output(i);
+    Serial.println(brightness);
     pixels.setPixelColor(i, pixels.Color(brightness, brightness, brightness));
   }
 
