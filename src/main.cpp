@@ -7,10 +7,12 @@
 int NROWS = 7;
 int NCOLS = 7;
 const int NPIXELS = 49;
-const int NBOIDS = 21;
+const int NBOIDS = 30;
 
-int BRIGHTNESS_INCREMENT = 50;
+int BRIGHTNESS_INCREMENT = 20;
 int DELAYVAL = 2;
+
+float COHESION_STRENGTH = 0.05;
 
 int STARTING_POSITION_LIMITS[2] = {1, 2};
 float STARTING_VELOCITY_LIMITS[2] = {-0.8, 1.3};
@@ -53,8 +55,8 @@ class Flock {
         BLA::Matrix<NBOIDS> directionToMiddleXs = positions.xs - getMean(positions.xs);
         BLA::Matrix<NBOIDS> directionToMiddleYs = positions.ys - getMean(positions.ys);
 
-        velocities.dxs -= directionToMiddleXs * 0.1;
-        velocities.dys -= directionToMiddleYs * 0.1;
+        velocities.dxs -= directionToMiddleXs * COHESION_STRENGTH;
+        velocities.dys -= directionToMiddleYs * COHESION_STRENGTH;
     }
 
     float getMean(BLA::Matrix<NBOIDS> values) {
@@ -112,11 +114,15 @@ void setup() {
 void loop() {
   flock.update();
   view.map(flock.positions);
+
+  // BLA::Matrix<1, NBOIDS> xs_T = ~flock.positions.xs;
+  // BLA::Matrix<NBOIDS, NBOIDS> xs_diff = flock.positions.xs - xs_T;
+
   pixels.clear(); // Set all pixel colors to 'off'
   for(int i=0; i<NPIXELS; i++) {
     int brightness = view.output(i);
     Serial.println(brightness);
-    pixels.setPixelColor(i, pixels.Color(brightness, brightness, brightness));
+    pixels.setPixelColor(i, pixels.Color(brightness, brightness * 0.1, brightness* 0.2));
   }
 
   pixels.show();
