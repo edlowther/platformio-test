@@ -6,6 +6,9 @@ int NCOLS = 8;
 const int NPIXELS = 48;
 const int NBOIDS = 7;
 
+const float MARGIN = 1.0;
+const float TURNFACTOR = 0.5;
+
 int BRIGHTNESS_INCREMENT = 20;
 int DELAYVAL = 100;
 
