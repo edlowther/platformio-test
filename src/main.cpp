@@ -1,49 +1,34 @@
 #include <Adafruit_NeoPixel.h>
 
+#include "../lib/Config.h"
+#include "../lib/Flock.h"
+#include "../lib/View.h"
+
 // Which pin on the Arduino is connected to the NeoPixels?
-#define PIN        9 // On Trinket or Gemma, suggest changing this to 1
+#define PIN        9
 
-// How many NeoPixels are attached to the Arduino?
-#define NUMPIXELS 20 // Popular NeoPixel ring size
+Adafruit_NeoPixel pixels(NPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 
-// When setting up the NeoPixel library, we tell it how many pixels,
-// and which pin to use to send signals. Note that for older NeoPixel
-// strips you might need to change the third parameter -- see the
-// strandtest example for more information on possible values.
-Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
-
-#define DELAYVAL 500 // Time (in milliseconds) to pause between pixels
+Flock flock;
+View view;
 
 void setup() {
-  // These lines are specifically to support the Adafruit Trinket 5V 16 MHz.
-  // Any other board, you can remove this part (but no harm leaving it):
-#if defined(__AVR_ATtiny85__) && (F_CPU == 16000000)
-  clock_prescale_set(clock_div_1);
-#endif
-  // END of Trinket-specific code.
-
-  pixels.begin(); // INITIALIZE NeoPixel strip object (REQUIRED)
+  pixels.begin();
   Serial.begin(9600);
 }
 
 void loop() {
-  Serial.print("Hello");
+  // Update the position of the flock: 
+  flock.update();
+  // Map the new positions to the pixels in the grid:
+  view.map(flock.positions);
+  // Tell the NeoPixel API about the new mapping:
   pixels.clear(); // Set all pixel colors to 'off'
-
-  // The first NeoPixel in a strand is #0, second is 1, all the way up
-  // to the count of pixels minus one.
-
-  int r = random(20);
-  int g = random(20);
-  int b = random(20);
-  for(int i=0; i<NUMPIXELS; i++) { // For each pixel...
-
-    // pixels.Color() takes RGB values, from 0,0,0 up to 255,255,255
-    // Here we're using a moderately bright green color:
-    pixels.setPixelColor(i, pixels.Color(r, g, b));
+  for(int i=0; i<NPIXELS; i++) {
+    int brightness = view.output(i);
+    pixels.setPixelColor(i, pixels.Color(brightness, brightness * 0.1, brightness* 0.2));
   }
-
-  pixels.show();   // Send the updated pixel colors to the hardware.
-
-  delay(DELAYVAL); // Pause before next pass through loop
+  pixels.show();
+  // Pause before next iteration:
+  delay(DELAYVAL); 
 }
