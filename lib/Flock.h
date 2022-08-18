@@ -71,23 +71,33 @@ class Flock {
             velocities.dxs(i) += tempDxChanges(i) + (totalVelocityDiffX / NBOIDS) * ALIGNMENT_STRENGTH;
             velocities.dys(i) += tempDyChanges(i) + (totalVelocityDiffY / NBOIDS) * ALIGNMENT_STRENGTH;
         }
-        positions.xs += velocities.dxs;
-        positions.ys += velocities.dys;
 
         for (int i = 0; i < NBOIDS; i++) {
-            if (positions.xs(i) < 0) {
-                positions.xs(i) += NCOLS - 1;
+            if (positions.xs(i) < MARGIN) {
+                velocities.dxs(i) += TURNFACTOR;
             }
-            else if (positions.xs(i) > NCOLS - 1) {
-                positions.xs(i) -= NCOLS - 1;
+            else if (positions.xs(i) > NCOLS - MARGIN - 1) {
+                velocities.dxs(i) -= TURNFACTOR;
             }
-            if (positions.ys(i) < 0) {
-                positions.ys(i) += NROWS - 1;
+            if (positions.ys(i) < MARGIN) {
+                velocities.dys(i) += TURNFACTOR;
             }
-            else if (positions.ys(i) > NROWS - 1) {
-                positions.ys(i) -= NROWS - 1;
+            else if (positions.ys(i) > NROWS - MARGIN - 1) {
+                velocities.dys(i) -= TURNFACTOR;
+            }
+            float speed = sqrt(pow(velocities.dxs(i), 2) + pow(velocities.dys(i), 2));
+            if (speed > MAXSPEED) {
+                velocities.dxs(i) = (velocities.dxs(i) / speed) * MAXSPEED;
+                velocities.dys(i) = (velocities.dys(i) / speed) * MAXSPEED;
+            }
+            if (speed < MINSPEED) {
+                velocities.dxs(i) = (velocities.dxs(i) / speed) * MINSPEED;
+                velocities.dys(i) = (velocities.dys(i) / speed) * MINSPEED;
             }
         }
+
+        positions.xs += velocities.dxs;
+        positions.ys += velocities.dys;
 
     }
 
