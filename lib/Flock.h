@@ -80,10 +80,19 @@ class Flock {
                 velocities.dxs(i) -= TURNFACTOR;
             }
             if (positions.ys(i) < MARGIN) {
-                velocities.dxs(i) += TURNFACTOR;
+                velocities.dys(i) += TURNFACTOR;
             }
             else if (positions.ys(i) > NROWS - MARGIN - 1) {
-                velocities.dxs(i) -= TURNFACTOR;
+                velocities.dys(i) -= TURNFACTOR;
+            }
+            float speed = sqrt(pow(velocities.dxs(i), 2) + pow(velocities.dys(i), 2));
+            if (speed > MAXSPEED) {
+                velocities.dxs(i) = (velocities.dxs(i) / speed) * MAXSPEED;
+                velocities.dys(i) = (velocities.dys(i) / speed) * MAXSPEED;
+            }
+            if (speed < MINSPEED) {
+                velocities.dxs(i) = (velocities.dxs(i) / speed) * MINSPEED;
+                velocities.dys(i) = (velocities.dys(i) / speed) * MINSPEED;
             }
         }
 
