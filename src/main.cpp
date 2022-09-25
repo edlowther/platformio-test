@@ -26,7 +26,7 @@ void loop() {
   pixels.clear(); // Set all pixel colors to 'off'
   for(int i=0; i<NPIXELS; i++) {
     int brightness = view.output(i);
-    pixels.setPixelColor(i, pixels.Color(brightness, brightness * 0.1, brightness* 0.2));
+    pixels.setPixelColor(i, pixels.Color(brightness * 0.1, brightness * 0.9, brightness* 0.5));
   }
   pixels.show();
   // Pause before next iteration:
