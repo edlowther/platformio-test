@@ -205,48 +205,78 @@ void test_view_map_brightness() {
     TEST_ASSERT_EQUAL_FLOAT(BRIGHTNESS_INCREMENT * 4, view.output(22));
 }
 
+void test_view_z_even() {
+    View view; 
+    Positions positions;
+    positions.xs = {0, 1, 2, 0, 2, 3, 3};
+    positions.ys = {0, 1, 2, 0, 3, 3, 3};
+    positions.zs = {0, 0, 0, 2, 2, 2, 4};
+    view.map(positions);
+    BLA::Matrix<7> expectedIdxs = {0, 14, 18, 112, 131, 140, 252};
+    for (int i = 0; i < 7; i++) {
+        int expectedIdx = expectedIdxs(i);
+        TEST_ASSERT_EQUAL_FLOAT(BRIGHTNESS_INCREMENT, view.output(expectedIdx));
+    }
+}
+
+void test_view_z_odd() {
+    View view; 
+    Positions positions;
+    positions.xs = {0, 1, 2, 2, 2, 4, 0};
+    positions.ys = {0, 1, 5, 6, 6, 0, 0};
+    positions.zs = {1, 1, 1, 1, 3, 3, 5};
+    view.map(positions);
+    BLA::Matrix<7> expectedIdxs = {111, 97, 90, 89, 201, 191, 335};
+    for (int i = 0; i < 7; i++) {
+        int expectedIdx = expectedIdxs(i);
+        TEST_ASSERT_EQUAL_FLOAT(BRIGHTNESS_INCREMENT, view.output(expectedIdx));
+    }
+}
+
 int main( int argc, char **argv) {
     UNITY_BEGIN();
-    NROWS = 7;
-    NCOLS = 7;
-    RUN_TEST(test_flock_size_is_correct);
-    // Scenario one: no cohesion, separation, or alignment
-    COHESION_STRENGTH = 0.0;
-    SEPARATION_DISTANCE = 0.0;
-    SEPARATION_STRENGTH = 0.0; 
-    ALIGNMENT_DISTANCE = 0.0;
-    ALIGNMENT_STRENGTH = 0.0; 
-    RUN_TEST(test_position_update_is_working);
-    // RUN_TEST(test_position_reverts_to_zero_if_past_edge_x);
-    // RUN_TEST(test_position_reverts_to_zero_if_past_edge_y);
-    // Scenario two: cohesion
-    COHESION_STRENGTH = 0.01;
-    RUN_TEST(test_position_update_with_cohesion_is_working);
-    COHESION_STRENGTH = 0.1;
-    RUN_TEST(test_position_update_with_cohesion_is_working_2);
-    COHESION_STRENGTH = 1;
-    RUN_TEST(test_position_update_with_cohesion_is_working_3);
-    // Scenario three: cohesion and separation
-    COHESION_STRENGTH = 0.1;
-    SEPARATION_DISTANCE = 4;
-    SEPARATION_STRENGTH = 0.2;
-    RUN_TEST(test_position_update_with_separation_is_working);
-    SEPARATION_DISTANCE = 5;
-    SEPARATION_STRENGTH = 0.3;
-    RUN_TEST(test_position_update_with_separation_is_working_2);
-    SEPARATION_DISTANCE = 9;
-    SEPARATION_STRENGTH = 0.1;
-    RUN_TEST(test_position_update_with_separation_is_working_3);
-    // Scenario four: cohesion, separation and alignment
-    ALIGNMENT_DISTANCE = 16;
-    ALIGNMENT_STRENGTH = 0.125; 
-    RUN_TEST(test_position_update_with_alignment_is_working);
-    // View:
-    NROWS = 6;
-    NCOLS = 8;
-    RUN_TEST(test_view_map_ints_only);
-    RUN_TEST(test_view_map_rounding);
-    RUN_TEST(test_view_map_brightness);
+    // NROWS = 7;
+    // NCOLS = 7;
+    // RUN_TEST(test_flock_size_is_correct);
+    // // Scenario one: no cohesion, separation, or alignment
+    // COHESION_STRENGTH = 0.0;
+    // SEPARATION_DISTANCE = 0.0;
+    // SEPARATION_STRENGTH = 0.0; 
+    // ALIGNMENT_DISTANCE = 0.0;
+    // ALIGNMENT_STRENGTH = 0.0; 
+    // RUN_TEST(test_position_update_is_working);
+    // // RUN_TEST(test_position_reverts_to_zero_if_past_edge_x);
+    // // RUN_TEST(test_position_reverts_to_zero_if_past_edge_y);
+    // // Scenario two: cohesion
+    // COHESION_STRENGTH = 0.01;
+    // RUN_TEST(test_position_update_with_cohesion_is_working);
+    // COHESION_STRENGTH = 0.1;
+    // RUN_TEST(test_position_update_with_cohesion_is_working_2);
+    // COHESION_STRENGTH = 1;
+    // RUN_TEST(test_position_update_with_cohesion_is_working_3);
+    // // Scenario three: cohesion and separation
+    // COHESION_STRENGTH = 0.1;
+    // SEPARATION_DISTANCE = 4;
+    // SEPARATION_STRENGTH = 0.2;
+    // RUN_TEST(test_position_update_with_separation_is_working);
+    // SEPARATION_DISTANCE = 5;
+    // SEPARATION_STRENGTH = 0.3;
+    // RUN_TEST(test_position_update_with_separation_is_working_2);
+    // SEPARATION_DISTANCE = 9;
+    // SEPARATION_STRENGTH = 0.1;
+    // RUN_TEST(test_position_update_with_separation_is_working_3);
+    // // Scenario four: cohesion, separation and alignment
+    // ALIGNMENT_DISTANCE = 16;
+    // ALIGNMENT_STRENGTH = 0.125; 
+    // RUN_TEST(test_position_update_with_alignment_is_working);
+    // // View:
+    // NROWS = 6;
+    // NCOLS = 8;
+    // RUN_TEST(test_view_map_ints_only);
+    // RUN_TEST(test_view_map_rounding);
+    // RUN_TEST(test_view_map_brightness);
+    RUN_TEST(test_view_z_even);
+    RUN_TEST(test_view_z_odd);
 
     return UNITY_END();
 }
