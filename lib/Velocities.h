@@ -7,6 +7,7 @@ class Velocities {
     public: 
     BLA::Matrix<NBOIDS> dxs;
     BLA::Matrix<NBOIDS> dys;
+    BLA::Matrix<NBOIDS> dzs;
 };
 
 #endif
