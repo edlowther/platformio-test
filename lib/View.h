@@ -15,12 +15,23 @@ class View {
         for (int i = 0; i < NBOIDS; i++) {
             int x = round(positions.xs(i));
             int y = round(positions.ys(i));
+            int z = round(positions.zs(i));
             int idx;
-            if (x % 2 == 0) {
-                idx = x * NROWS + y;
-            } 
+            if (z % 2 == 0) {
+                if (x % 2 == 0) {
+                    idx = z * NROWS * NCOLS + x * NROWS + y;
+                } 
+                else {
+                    idx = z * NROWS * NCOLS + x * NROWS + (NROWS - y - 1);
+                }
+            }
             else {
-                idx = x * NROWS + (NROWS - y - 1);
+                if (x % 2 == 0) {
+                    idx = z * NROWS * NCOLS + NROWS * NCOLS - (x * NROWS + y + 1);
+                } 
+                else {
+                    idx = z * NROWS * NCOLS + NROWS * NCOLS - (x * NROWS + (NROWS - y));
+                }
             }
             output(idx) += BRIGHTNESS_INCREMENT;
         }
