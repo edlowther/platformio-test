@@ -29,7 +29,7 @@ void loop() {
     if (brightness >= 255) {
       brightness = 255;
     }
-    pixels.setPixelColor(i, pixels.Color(brightness, brightness, brightness));
+    pixels.setPixelColor(i, pixels.Color(brightness, brightness*0.1, brightness*0.1));
   }
   pixels.show();
   // Pause before next iteration:
