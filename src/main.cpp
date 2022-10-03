@@ -29,14 +29,14 @@ BLA::Matrix<NPIXELS> t_minus_4;
 void loop() {
   loudness = analogRead(0);
   Serial.println(loudness);
-  loudnessFactor = map(loudness, 0, 200, 100, 0);
+  loudnessFactor = map(loudness, 0, 250, 3, 0);
   if (loudnessFactor < 0) {
     loudnessFactor = 0;
-  } else if (loudnessFactor > 100) {
-    loudnessFactor = 100;
+  } else if (loudnessFactor > 3) {
+    loudnessFactor = 3;
   }
-  if (loudnessFactor > 20) {
-    SEPARATION_STRENGTH = 0.9;
+  if (loudnessFactor > 1) {
+    SEPARATION_STRENGTH = loudnessFactor;
   } else {
     SEPARATION_STRENGTH = 0.5; 
   }
