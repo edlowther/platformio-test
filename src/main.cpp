@@ -20,6 +20,12 @@ void setup() {
 int loudness;
 float loudnessFactor; 
 
+BLA::Matrix<NPIXELS> t_minus_0;
+BLA::Matrix<NPIXELS> t_minus_1;
+BLA::Matrix<NPIXELS> t_minus_2;
+BLA::Matrix<NPIXELS> t_minus_3;
+BLA::Matrix<NPIXELS> t_minus_4;
+
 void loop() {
   loudness = analogRead(0);
   Serial.println(loudness);
@@ -42,14 +48,35 @@ void loop() {
   view.map(flock.positions);
   // Tell the NeoPixel API about the new mapping:
   pixels.clear(); // Set all pixel colors to 'off'
+  t_minus_0 = view.output;
   for(int i=0; i<NPIXELS; i++) {
-    int brightness = view.output(i);
-    if (brightness >= 255) {
-      brightness = 255;
+    int brightness_minus_0 = t_minus_0(i);
+    int brightness_minus_1 = t_minus_1(i);
+    int brightness_minus_2 = t_minus_2(i);
+    int brightness_minus_3 = t_minus_3(i);
+    int brightness_minus_4 = t_minus_4(i);
+    pixels.setPixelColor(i, pixels.Color(brightness_minus_0*0.5, brightness_minus_0, brightness_minus_0*0.5));
+    if (brightness_minus_0 == 0) {
+      if (brightness_minus_1 == 0) {
+        if (brightness_minus_2 == 0) {
+          if (brightness_minus_3 == 0) {
+            pixels.setPixelColor(i, pixels.Color(0, brightness_minus_4*0.05, 0));
+          } else {
+            pixels.setPixelColor(i, pixels.Color(0, brightness_minus_3*0.2, 0));
+          }
+        } else {
+          pixels.setPixelColor(i, pixels.Color(brightness_minus_2*0.1, brightness_minus_2*0.5, brightness_minus_2*0.1));
+        }
+      } else {
+        pixels.setPixelColor(i, pixels.Color(brightness_minus_1*0.5, brightness_minus_1*0.8, brightness_minus_1*0.5));
+      }
     }
-    pixels.setPixelColor(i, pixels.Color(brightness, brightness*0.1, brightness*0.1));
   }
   pixels.show();
+  t_minus_4 = t_minus_3;
+  t_minus_3 = t_minus_2;
+  t_minus_2 = t_minus_1;
+  t_minus_1 = t_minus_0;
   // Pause before next iteration:
   delay(DELAYVAL); 
 }

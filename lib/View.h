@@ -34,6 +34,9 @@ class View {
                 }
             }
             output(idx) += BRIGHTNESS_INCREMENT;
+            if (output(idx) > 255) {
+                output(idx) = 255;
+            }
         }
     }
 };
