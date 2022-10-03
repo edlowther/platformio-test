@@ -5,7 +5,7 @@ int NROWS = 8;
 int NCOLS = 7;
 int NLAYERS = 7;
 const int NPIXELS = 392;
-const int NBOIDS = 8;
+const int NBOIDS = 5;
 
 const float MARGIN = 1.0;
 const float TURNFACTOR = 0.5;
@@ -13,8 +13,8 @@ const float TURNFACTOR = 0.5;
 const float MAXSPEED = 5.5;
 const float MINSPEED = 0.05;
 
-int BRIGHTNESS_INCREMENT = 20;
-int DELAYVAL = 120;
+int BRIGHTNESS_INCREMENT = 200;
+int DELAYVAL = 50;
 
 float COHESION_STRENGTH = 0.3;
 
